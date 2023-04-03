@@ -12,6 +12,11 @@ local _blacklist = {".gitignore", "README.md"}
 -- Set workspace folder
 local workspace_path = "/.system"
 
+-- Set default No-cache headers
+local headers = {
+	["Cache-Control"] = "no-cache"
+}
+
 -- Check installation
 if not args[0] == "skipreboot" then
 	print("Loading from disk..")
@@ -101,7 +106,7 @@ end
 
 -- Fetch commit tree
 function fetch_commit_tree(branch)
-	local req = http.get("https://api." .. _host .. "/repos/" .. _org .. "/" .. _repository .. "/branches/" .. branch)
+	local req = http.get("https://api." .. _host .. "/repos/" .. _org .. "/" .. _repository .. "/branches/" .. branch, headers, false)
 	local src = textutils.unserialiseJSON(removeQuotations(req.readAll()))
 	req.close()
 
@@ -113,7 +118,7 @@ end
 -- Fetch OS Files from git API
 function fetch_repo_filepaths(branch)
 	local url = fetch_commit_tree(branch)
-	local req = http.get(url)
+	local req = http.get(url, headers, false)
 	local src = textutils.unserialiseJSON(removeQuotations(req.readAll()))
 	req.close()
 	
