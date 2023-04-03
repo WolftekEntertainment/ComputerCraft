@@ -93,6 +93,8 @@ function download(url, file_abs_path, verbose)
 end
 
 function removeQuotations(val)
+	print(textutils.serialize(val))
+	print(val)
 	local replaced_string = string.gsub(val, "\"", "")
 	return replaced_string
 end
