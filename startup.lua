@@ -98,8 +98,6 @@ function download(url, file_abs_path, verbose)
 end
 
 function removeQuotations(val)
-	print(textutils.serialize(val))
-	print(val)
 	local replaced_string = string.gsub(val, "\"", "")
 	return replaced_string
 end
@@ -107,10 +105,10 @@ end
 -- Fetch commit tree
 function fetch_commit_tree(branch)
 	local req = http.get("https://api." .. _host .. "/repos/" .. _org .. "/" .. _repository .. "/branches/" .. branch, headers, false)
-	local src = textutils.unserialiseJSON(removeQuotations(req.readAll()))
+	local src = textutils.unserialiseJSON(req.readAll())
 	req.close()
 
-	local url = src["commit"]["commit"]["tree"]["url"] .. "?recursive=1"
+	local url = removeQuotations(src["commit"]["commit"]["tree"]["url"]) .. "?recursive=1"
 
 	return url
 end
@@ -119,12 +117,12 @@ end
 function fetch_repo_filepaths(branch)
 	local url = fetch_commit_tree(branch)
 	local req = http.get(url, headers, false)
-	local src = textutils.unserialiseJSON(removeQuotations(req.readAll()))
+	local src = textutils.unserialiseJSON(req.readAll())
 	req.close()
 	
 	local list = {}
 	for i, file in pairs(src["tree"]) do
-		if file["type"] == "blob" then table.insert(list, file["path"]) end
+		if file["type"] == "blob" then table.insert(list, removeQuotations(file["path"])) end
 	end
 	return list
 end
@@ -149,11 +147,12 @@ function create_startup()
 end
 
 -- Installation
-local file_paths = fetch_repo_filepaths("os")
+local branch = "os"
+local file_paths = fetch_repo_filepaths(branch)
 for i, file_path in pairs(file_paths) do
 	if not table_contains(_blacklist, file_path) then
 		local file_path_abs = workspace_abs_path .. "/" .. file_path
-		download(get_url("os", file_path), file_path_abs)
+		download(get_url(branch, file_path), file_path_abs)
 	end
 end
 
