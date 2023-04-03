@@ -62,11 +62,16 @@ function sound.playDisk(drive, speaker)
 end
 
 function sound.stop(speaker)
+    speaker = speaker or nil
+
     if speaker then
         speaker.stop()
     else
-        for i, speaker in pairs(sound.getSpeakers()) do
-            speaker.stop()
+        local speakers = sound.getSpeakers()
+        if speakers then
+            for i, speaker in pairs(speakers) do
+                speaker.stop()
+            end
         end
     end
 end
