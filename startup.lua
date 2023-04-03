@@ -94,7 +94,7 @@ end
 
 -- Fetch commit tree
 function fetch_commit_tree(branch)
-	local req = http.get("https://api." .. _host .. "repos/" .. _org .. "/" .. _repository .. "/branches/" .. branch)
+	local req = http.get("https://api." .. _host .. "/repos/" .. _org .. "/" .. _repository .. "/branches/" .. branch)
 	local src = textutils.unserialiseJSON(req.readAll())
 	req.close()
 	return src["commit"]["commit"]["tree"]["url"]
