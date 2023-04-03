@@ -1,0 +1,15 @@
+function revertSettings()
+	settings.set("shell.allow_disk_startup", true)
+	settings.set("list.show_hidden", false)
+	settings.save()
+end
+
+print("Uninstalling OS...")
+sleep(2)
+revertSettings()
+shell.run("rm /.system/")
+shell.run("rm /startup.lua")
+print("Sucessfully uninstalled OS!")
+print("Rebooting system!")
+sleep(2)
+shell.run("reboot")

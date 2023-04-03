@@ -1,0 +1,5 @@
+print("Updating OS...")
+sleep(2)
+shell.run("cd /.system")
+shell.run("wget https://cloudn.dk:7990/projects/MC_CC/repos/installation/raw/startup.lua?at=refs%2Fheads%2Fmaster installer.lua")
+shell.run("installer.lua skipreboot")
