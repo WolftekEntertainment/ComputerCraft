@@ -100,7 +100,7 @@ end
 -- Fetch commit tree
 function fetch_commit_tree(branch)
 	local req = http.get("https://api." .. _host .. "/repos/" .. _org .. "/" .. _repository .. "/branches/" .. branch)
-	local src = removeQuotations(textutils.unserialiseJSON(req.readAll()))
+	local src = textutils.unserialiseJSON(removeQuotations(req.readAll()))
 	req.close()
 
 	local url = src["commit"]["commit"]["tree"]["url"] .. "?recursive=1"
@@ -112,7 +112,7 @@ end
 function fetch_repo_filepaths(branch)
 	local url = fetch_commit_tree(branch)
 	local req = http.get(url)
-	local src = removeQuotations(textutils.unserialiseJSON(req.readAll()))
+	local src = textutils.unserialiseJSON(removeQuotations(req.readAll()))
 	req.close()
 	
 	local list = {}
