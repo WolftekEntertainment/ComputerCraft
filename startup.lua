@@ -92,19 +92,27 @@ function download(url, file_abs_path, verbose)
 	if verbose then print("Download complete!") end
 end
 
+function removeQuotations(val)
+	local replaced_string = string.gsub(val, "\"", "")
+	return replaced_string
+end
+
 -- Fetch commit tree
 function fetch_commit_tree(branch)
 	local req = http.get("https://api." .. _host .. "/repos/" .. _org .. "/" .. _repository .. "/branches/" .. branch)
-	local src = textutils.unserialiseJSON(req.readAll())
+	local src = removeQuotations(textutils.unserialiseJSON(req.readAll()))
 	req.close()
-	return src["commit"]["commit"]["tree"]["url"]
+
+	local url = src["commit"]["commit"]["tree"]["url"] .. "?recursive=1"
+
+	return url
 end
 
 -- Fetch OS Files from git API
 function fetch_repo_filepaths(branch)
 	local url = fetch_commit_tree(branch)
 	local req = http.get(url)
-	local src = textutils.unserialiseJSON(req.readAll())
+	local src = removeQuotations(textutils.unserialiseJSON(req.readAll()))
 	req.close()
 	
 	local list = {}
