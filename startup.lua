@@ -2,8 +2,9 @@
 local args = { ... }
 
 -- Globals
-local _host = "https://cloudn.dk:7990"
-local _project = "MC_CC"
+local _host = "github.com"
+local _org = "WolftekEntertainment"
+local _repository = "ComputerCraft"
 local _branch = "master"
 
 local _blacklist = {".gitignore", "README.md"}
@@ -91,26 +92,31 @@ function download(url, file_abs_path, verbose)
 	if verbose then print("Download complete!") end
 end
 
+-- Fetch commit tree
+function fetch_commit_tree(branch)
+	local req = http.get("https://api." .. _host .. "repos/" .. _org .. "/" .. _repository .. "/branches/" .. branch)
+	local src = textutils.unserialiseJSON(req.readAll())
+	req.close()
+	return src["commit"]["commit"]["tree"]["url"]
+end
+
 -- Fetch OS Files from git API
--- Example: {"values":[".gitignore","README.md","archive.txt","install/config.txt","install/startup.lua","install/startup_utils.lua","os.lua","test.lua"],"size":8,"isLastPage":true,"start":0,"limit":25,"nextPageStart":null}
-function fetch_repo_filepaths(repo)
-	local req = http.get(_host .. "/rest/api/1.0/projects/" .. _project .. "/repos/" .. repo .. "/files?branch=" .. _branch)
+function fetch_repo_filepaths(branch)
+	local url = fetch_commit_tree(branch)
+	local req = http.get(url)
 	local src = textutils.unserialiseJSON(req.readAll())
 	req.close()
 	
 	local list = {}
-	for i, file in pairs(src["values"]) do
-		table.insert(list, file)
+	for i, file in pairs(src["tree"]) do
+		if file["type"] == "blob" then table.insert(list, file["path"]) end
 	end
 	return list
 end
 
 -- Construct final url based on repository and filename
-function get_url(repo, file_path)
-	return _host .. "/projects/" .. _project .. "/repos/" .. repo .."/raw/"
-		.. file_path
-		.. "?at=refs%2Fheads%2F"
-		.. _branch
+function get_url(branch, file_path)
+	return "https://raw.githubusercontent.com/" .. _org .. "/" .. _repository .. "/" .. branch .. "/" .. file_path
 end
 
 -- Generic table contains function to compare if entry exists in table
