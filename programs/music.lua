@@ -47,19 +47,31 @@ end
 local function printUsage()
     local programName = args[1] or fs.getName(shell.getRunningProgram())
     print("Plays music, usages:")
-    print(programName .. " play <url or file>")
     print(programName .. " stop")
+    print(programName .. " play <url or file>")
 end
 
 local library = fetchMusicLibrary()
 
 if #args > 0 then
     if args[1] == "play" then
-        --sound.playDisk()
+        if args[2] and #library > 0 then
+            for i, song in pairs(library) do
+                if song["title"] == args[2] then
+                    print("Playing: " .. song["title"])
+                    sound.play(song["url"])
+                    break
+                end
+            end
+        end
+    elseif args[1] == "loop" then
         if #library > 0 then
-            local song = library[1]
-            print("Playing: " .. song["title"])
-            sound.play(song["url"])
+            while true do
+                for i, song in pairs(library) do
+                    print("Playing: " .. song["title"])
+                    sound.play(song["url"])
+                end
+            end
         end
     elseif args[1] == "stop" then
         sound.stop()
