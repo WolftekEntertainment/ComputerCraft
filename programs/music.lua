@@ -66,7 +66,9 @@ if #args > 0 then
     if args[1] == "play" then
         --sound.playDisk()
         if #library > 0 then
+            print(textutils.serialize(library))
             local song = library[0]
+            print(textutils.serialize(song))
             print(song["title"])
             streamSong(song["url"])
         end
