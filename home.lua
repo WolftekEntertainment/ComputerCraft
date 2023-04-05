@@ -1,4 +1,8 @@
 local gui = require("gui")
 
-gui.Home()
-gui.Actions()
+if(term.isColor() == true) then
+    gui.Home()
+    gui.Actions()
+else
+    gui.Terminal()
+end
