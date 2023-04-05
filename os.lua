@@ -54,6 +54,7 @@ function setupAliases()
 	shell.setAlias("env", "/.system/env.lua")
 	shell.setAlias("music", "/.system/programs/music.lua")
 	shell.setAlias("home", "/.system/home.lua")
+	shell.setAlias("matrix", "/.system/programs/matrix.lua")
 end
 
 -- Run
