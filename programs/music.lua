@@ -44,20 +44,11 @@ local function fetchMusicLibrary()
     return library
 end
 
-local function streamSong(url)
-    local req = http.get(url, nil, true)
-    local src = req.readAll()
-    req.close()
-    sound.playFile(src)
-end
-
 local function printUsage()
     local programName = args[1] or fs.getName(shell.getRunningProgram())
-    print("Plays music discs, usages:")
-    print(programName .. " play")
-    --print(programName .. " play <drive>")
+    print("Plays music, usages:")
+    print(programName .. " play <url or file>")
     print(programName .. " stop")
-    print(programName .. " repeat")
 end
 
 local library = fetchMusicLibrary()
@@ -67,19 +58,11 @@ if #args > 0 then
         --sound.playDisk()
         if #library > 0 then
             local song = library[1]
-            print(song["title"])
-            streamSong(song["url"])
+            print("Playing: " .. song["title"])
+            sound.play(song["url"])
         end
     elseif args[1] == "stop" then
         sound.stop()
-    elseif args[1] == "repeat" then
-        while true do
-            local drive = sound.findDisk()
-            local songName = drive.getAudioTitle()
-            local playTime = songsLength[songName]
-            sound.playDisk(drive)
-            os.sleep(playTime)
-        end
     else
         printUsage()
     end
