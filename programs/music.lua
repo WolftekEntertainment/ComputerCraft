@@ -1,6 +1,8 @@
 -- Imports
 package.path = package.path .. ";/.system/lib/?.lua"
 local sound = require("sound")
+local utils = require("utils")
+local repo = require("repo")
 
 -- Globals
 songsLength = {
@@ -20,8 +22,37 @@ songsLength = {
 
 args = { ... }
 
+-- "Minecraft/Volume Beta/Aria Math.dfpwm"
+
+local function fetchMusicLibrary()
+    local files = repo.listContent("music")
+
+    local library = {}
+    for i, file in pairs(files) do
+        local urlPrefix = "https://github.com/WolftekEntertainment/ComputerCraft/blob/music/"
+        local urlSuffix = "?raw=true"
+        local url = urlPrefix .. utils.urlEncode(file) .. urlSuffix
+
+        local song = {}
+        song["title"] = string.gsub(string.gsub(file, ".*(.\/)", ""), ".dfpwm", "")
+        song["url"] = url
+        song["online"] = false
+
+        table.insert(library, song)
+    end
+
+    return library
+end
+
+local function streamSong(url)
+    local req = http.get(url, nil, true)
+    local src = req.readAll()
+    req.close()
+    sound.playFile(src)
+end
+
 local function printUsage()
-    local programName = arg[0] or fs.getName(shell.getRunningProgram())
+    local programName = args[1] or fs.getName(shell.getRunningProgram())
     print("Plays music discs, usages:")
     print(programName .. " play")
     --print(programName .. " play <drive>")
@@ -29,9 +60,16 @@ local function printUsage()
     print(programName .. " repeat")
 end
 
+local library = fetchMusicLibrary()
+
 if #args > 0 then
     if args[1] == "play" then
-        sound.playDisk()
+        --sound.playDisk()
+        if #library > 0 then
+            local song = library[0]
+            print(song["title"])
+            streamSong(song["url"])
+        end
     elseif args[1] == "stop" then
         sound.stop()
     elseif args[1] == "repeat" then
