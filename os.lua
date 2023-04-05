@@ -2,7 +2,7 @@
 local sound = require("lib/sound")
 
 -- Globals
-local width, height = term.getSize()
+local _width, _height = term.getSize()
 local os_colors = {
 	bg = colors.white,
 	text = colors.black
@@ -16,15 +16,14 @@ local os_sounds = {
 
 function centerPos(w, h)
 	-- Will return center pos (top left) for object with w and h
-	local x = math.floor((width - w) / 2)
-	local y = math.floor((height - h) / 2)
+	local x = math.floor((_width - w) / 2)
+	local y = math.floor((_height - h) / 2)
 	return x, y
 end
 
 function showSplash()
 	-- Prep the splash screen
 	term.clear()
-	--paintutils.drawFilledBox(0, 0, width, height, os_colors["bg"]) -- Set bg
 	local wallpaper = paintutils.loadImage(".system/images/wallpaper.nfp")
 	paintutils.drawImage(wallpaper, 1, 1) -- Set bg
 	term.setTextColor(os_colors["text"])
@@ -54,19 +53,10 @@ function setupAliases()
 	shell.setAlias("update", "/.system/update.lua")
 	shell.setAlias("env", "/.system/env.lua")
 	shell.setAlias("music", "/.system/programs/music.lua")
-end
-
--- Return to terminal
-function resetTerminal()
-	paintutils.drawFilledBox(0, 0, width, height, colors.black)
-	term.setCursorPos(1, 1)
-	term.setTextColor(colors.white)
-	term.setBackgroundColor(colors.black)
-	shell.run("cd /")
-	term.clear()
+	shell.setAlias("home", "/.system/home.lua")
 end
 
 -- Run
 showSplash()
 setupAliases()
-resetTerminal()
+shell.run("home")
