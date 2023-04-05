@@ -69,7 +69,7 @@ function download(url, file_abs_path, verbose)
 	end
 	
 	-- Get response
-	local response = http.get(url , nil , true) -- use binary
+	local response = http.get(url , headers , true) -- use binary
     if verbose and not response then
         print("Failed to get response: " .. url)
         return nil
