@@ -36,7 +36,9 @@ function repo.listContent(branch)
 	
 	local list = {}
 	for i, file in pairs(src["tree"]) do
-		if file["type"] == "blob" then table.insert(list, file["path"]) end
+		if file["type"] == "blob" and not utils.tableContains(_blacklist, file["path"]) then
+			table.insert(list, file["path"])
+		end
 	end
 	return list
 end
