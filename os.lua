@@ -36,14 +36,14 @@ function showSplash()
 	term.write(message)
 
 	-- Play startup/boot sound
-	sound.playFile(os_sounds["startup"])
+	sound.play(os_sounds["startup"])
 
 	-- Await splash finish
 	os.sleep(3)
 
 	-- Play logon sound
 	sound.stop()
-	sound.playFile(os_sounds["logon"])
+	sound.play(os_sounds["logon"])
 end
 
 function setupAliases()

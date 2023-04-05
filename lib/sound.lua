@@ -18,6 +18,37 @@ function sound.getSpeakers(name)
     end
 end
 
+function sound.play(file, speaker)
+    speaker = speaker or peripheral.find("speaker")
+    if not speaker then return end
+
+    local handle, err
+    if http and file:match("^https?://") then
+        handle, err = http.get(file, nil, true)
+    else
+        handle, err = fs.open(file, "rb")
+    end
+
+    if not handle then
+        printError("Could not play audio:")
+        error(err, 0)
+    end
+
+    local decoder = dfpwm.make_decoder()
+    while true do
+        local chunk = handle.read(16 * 1024)
+        if not chunk then break end
+
+        local buffer = decoder(chunk)
+        while not speaker.playAudio(buffer) do
+            os.pullEvent("speaker_audio_empty")
+        end
+    end
+
+    handle.close()
+end
+
+--[[
 function sound.playFile(path, speaker)
     speaker = speaker or peripheral.find("speaker")
     if not speaker then return end
@@ -31,6 +62,7 @@ function sound.playFile(path, speaker)
         end
     end
 end
+]]--
 
 function sound.findDisk()
     local drive
