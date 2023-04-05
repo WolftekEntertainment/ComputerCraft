@@ -5,7 +5,6 @@ local utils = require("utils")
 local _host = "github.com"
 local _org = "WolftekEntertainment"
 local _repository = "ComputerCraft"
---local _branch = "master"
 local _blacklist = {".gitignore", "README.md"}
 local _headers = {
 	["Cache-Control"] = "no-cache"
