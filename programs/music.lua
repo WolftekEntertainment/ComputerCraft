@@ -6,21 +6,21 @@ local repo = require("repo")
 
 -- Globals
 local library = {
-    {["title"]="13", ["author"]="C418", ["length"]=178, ["url"]="minecraft:music_disc.13"},
-    {["title"]="cat", ["author"]="C418", ["length"]=185, ["url"]="minecraft:music_disc.cat"},
-    {["title"]="blocks", ["author"]="C418", ["length"]=345, ["url"]="minecraft:music_disc.blocks"},
-    {["title"]="chirp", ["author"]="C418", ["length"]=185, ["url"]="minecraft:music_disc.chirp"},
-    {["title"]="far", ["author"]="C418", ["length"]=174, ["url"]="minecraft:music_disc.far"},
-    {["title"]="mall", ["author"]="C418", ["length"]=197, ["url"]="minecraft:music_disc.mall"},
-    {["title"]="mellohi", ["author"]="C418", ["length"]=96, ["url"]="minecraft:music_disc.mellohi"},
-    {["title"]="stal", ["author"]="C418", ["length"]=150, ["url"]="minecraft:music_disc.stal"},
-    {["title"]="strad", ["author"]="C418", ["length"]=183, ["url"]="minecraft:music_disc.strad"},
-    {["title"]="ward", ["author"]="C418", ["length"]=251, ["url"]="minecraft:music_disc.ward"},
-    {["title"]="11", ["author"]="C418", ["length"]=71, ["url"]="minecraft:music_disc.11"},
-    {["title"]="wait", ["author"]="C418", ["length"]=238, ["url"]="minecraft:music_disc.wait"},
-    {["title"]="pigstep", ["author"]="Lena Raine", ["length"]=148, ["url"]="minecraft:music_disc.pigstep"},
-    {["title"]="otherside", ["author"]="Lena Raine", ["length"]=195, ["url"]="minecraft:music_disc.otherside"},
-    {["title"]="5", ["author"]="Samuel Åberg", ["length"]=178, ["url"]="minecraft:music_disc.5"}
+    {["title"]="13", ["author"]="C418", ["duration"]=178, ["url"]="minecraft:music_disc.13"},
+    {["title"]="cat", ["author"]="C418", ["duration"]=185, ["url"]="minecraft:music_disc.cat"},
+    {["title"]="blocks", ["author"]="C418", ["duration"]=345, ["url"]="minecraft:music_disc.blocks"},
+    {["title"]="chirp", ["author"]="C418", ["duration"]=185, ["url"]="minecraft:music_disc.chirp"},
+    {["title"]="far", ["author"]="C418", ["duration"]=174, ["url"]="minecraft:music_disc.far"},
+    {["title"]="mall", ["author"]="C418", ["duration"]=197, ["url"]="minecraft:music_disc.mall"},
+    {["title"]="mellohi", ["author"]="C418", ["duration"]=96, ["url"]="minecraft:music_disc.mellohi"},
+    {["title"]="stal", ["author"]="C418", ["duration"]=150, ["url"]="minecraft:music_disc.stal"},
+    {["title"]="strad", ["author"]="C418", ["duration"]=183, ["url"]="minecraft:music_disc.strad"},
+    {["title"]="ward", ["author"]="C418", ["duration"]=251, ["url"]="minecraft:music_disc.ward"},
+    {["title"]="11", ["author"]="C418", ["duration"]=71, ["url"]="minecraft:music_disc.11"},
+    {["title"]="wait", ["author"]="C418", ["duration"]=238, ["url"]="minecraft:music_disc.wait"},
+    {["title"]="pigstep", ["author"]="Lena Raine", ["duration"]=148, ["url"]="minecraft:music_disc.pigstep"},
+    {["title"]="otherside", ["author"]="Lena Raine", ["duration"]=195, ["url"]="minecraft:music_disc.otherside"},
+    {["title"]="5", ["author"]="Samuel Åberg", ["duration"]=178, ["url"]="minecraft:music_disc.5"}
 }
 
 args = { ... }
@@ -37,8 +37,13 @@ local function appendMusicLibrary()
 
         local song = {}
         song["title"] = string.gsub(string.gsub(file, ".*(.\/)", ""), ".dfpwm", "")
+        song["author"] = "John Doe"
         song["url"] = url
-        song["online"] = true
+
+        -- Get duration
+        local req = http.get(url, nil, true)
+        song["duration"] = http.getResponseHeaders()["content-length"] * 8 / 48000 -- 8 bit depth and 48.000 samplerate
+        req.close()
 
         table.insert(library, song)
     end
@@ -70,7 +75,7 @@ if #args > 0 then
             while true do
                 for i, song in pairs(library) do
                     print("Playing: " .. song["title"])
-                    sound.play(song["url"])
+                    sound.play(song["url"], song["duration"])
                 end
             end
         end
