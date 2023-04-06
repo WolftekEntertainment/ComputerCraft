@@ -42,7 +42,7 @@ function sound.play(file, duration, speaker)
 
     if disc then
         speaker.playSound(file)
-        sleep(duration)
+        os.sleep(duration)
         return
     end
 

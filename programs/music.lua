@@ -42,7 +42,7 @@ local function appendMusicLibrary()
 
         -- Get duration
         local req = http.get(url, nil, true)
-        song["duration"] = http.getResponseHeaders()["content-length"] * 8 / 48000 -- 8 bit depth and 48.000 samplerate
+        song["duration"] = req.getResponseHeaders()["content-length"] * 8 / 48000 -- 8 bit depth and 48.000 samplerate
         req.close()
 
         table.insert(library, song)
