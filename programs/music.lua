@@ -5,29 +5,31 @@ local utils = require("utils")
 local repo = require("repo")
 
 -- Globals
-songsLength = {
-    ["C418 - 13"]=178,
-    ["C418 - cat"]=185,
-    ["C418 - blocks"]=345,
-    ["C418 - chirp"]=185,
-    ["C418 - far"]=174,
-    ["C418 - mall"]=197,
-    ["C418 - mellohi"]=96,
-    ["C418 - stal"]=150,
-    ["C418 - strad"]=183,
-    ["C418 - ward"]=251,
-    ["C418 - 11"]=71,
-    ["C418 - wait"]=238,
+local library = {
+    {["title"]="13", ["author"]="C418", ["length"]=178, ["url"]="minecraft:music_disc.13"},
+    {["title"]="cat", ["author"]="C418", ["length"]=185, ["url"]="minecraft:music_disc.cat"},
+    {["title"]="blocks", ["author"]="C418", ["length"]=345, ["url"]="minecraft:music_disc.blocks"},
+    {["title"]="chirp", ["author"]="C418", ["length"]=185, ["url"]="minecraft:music_disc.chirp"},
+    {["title"]="far", ["author"]="C418", ["length"]=174, ["url"]="minecraft:music_disc.far"},
+    {["title"]="mall", ["author"]="C418", ["length"]=197, ["url"]="minecraft:music_disc.mall"},
+    {["title"]="mellohi", ["author"]="C418", ["length"]=96, ["url"]="minecraft:music_disc.mellohi"},
+    {["title"]="stal", ["author"]="C418", ["length"]=150, ["url"]="minecraft:music_disc.stal"},
+    {["title"]="strad", ["author"]="C418", ["length"]=183, ["url"]="minecraft:music_disc.strad"},
+    {["title"]="ward", ["author"]="C418", ["length"]=251, ["url"]="minecraft:music_disc.ward"},
+    {["title"]="11", ["author"]="C418", ["length"]=71, ["url"]="minecraft:music_disc.11"},
+    {["title"]="wait", ["author"]="C418", ["length"]=238, ["url"]="minecraft:music_disc.wait"},
+    {["title"]="pigstep", ["author"]="Lena Raine", ["length"]=148, ["url"]="minecraft:music_disc.pigstep"},
+    {["title"]="otherside", ["author"]="Lena Raine", ["length"]=195, ["url"]="minecraft:music_disc.otherside"},
+    {["title"]="5", ["author"]="Samuel Åberg", ["length"]=178, ["url"]="minecraft:music_disc.5"}
 }
 
 args = { ... }
 
 -- "Minecraft/Volume Beta/Aria Math.dfpwm"
 
-local function fetchMusicLibrary()
+local function appendMusicLibrary()
     local files = repo.listContent("music")
 
-    local library = {}
     for i, file in pairs(files) do
         local urlPrefix = "https://github.com/WolftekEntertainment/ComputerCraft/blob/music/"
         local urlSuffix = "?raw=true"
@@ -36,12 +38,10 @@ local function fetchMusicLibrary()
         local song = {}
         song["title"] = string.gsub(string.gsub(file, ".*(.\/)", ""), ".dfpwm", "")
         song["url"] = url
-        song["online"] = false
+        song["online"] = true
 
         table.insert(library, song)
     end
-
-    return library
 end
 
 local function printUsage()
@@ -51,18 +51,19 @@ local function printUsage()
     print(programName .. " play <url or file>")
 end
 
-local library = fetchMusicLibrary()
+appendMusicLibrary()
 
 if #args > 0 then
     if args[1] == "play" then
         if args[2] and #library > 0 then
             for i, song in pairs(library) do
-                if song["title"] == args[2] then
+                if string.lower(song["title"]) == string.lower(args[2]) then
                     print("Playing: " .. song["title"])
                     sound.play(song["url"])
-                    break
+                    return
                 end
             end
+            print("Could not find song " .. args[2])
         end
     elseif args[1] == "loop" then
         if #library > 0 then

@@ -22,16 +22,26 @@ function sound.play(file, speaker)
     speaker = speaker or peripheral.find("speaker")
     if not speaker then return end
 
-    local handle, err
+    local handle, err, disc
     if http and file:match("^https?://") then
+        -- Online file, read as binary
         handle, err = http.get(file, nil, true)
+    elseif file:match("^minecraft:") then
+        -- Minecraft sound, play ordinarily
+        disc = true
     else
+        -- Local file, read as binary
         handle, err = fs.open(file, "rb")
     end
 
-    if not handle then
+    if not handle and not disc then
         printError("Could not play audio:")
         error(err, 0)
+    end
+
+    if disc then
+        speaker.playSound(file)
+        return
     end
 
     local decoder = dfpwm.make_decoder()
