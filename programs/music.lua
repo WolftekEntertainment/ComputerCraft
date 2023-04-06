@@ -56,15 +56,25 @@ local function printUsage()
     print(programName .. " play <url or file>")
 end
 
-appendMusicLibrary()
+local function playSong(song)
+    print("Playing: " .. song["title"])
+    parallel.waitForAny(
+        function()
+            textutils.slowPrint("##########", song["duration"] / 10)
+        end,
+        function()
+            sound.play(song["url"], song["duration"])
+        end
+    )
+end
 
 if #args > 0 then
     if args[1] == "play" then
+        appendMusicLibrary()
         if args[2] and #library > 0 then
             for i, song in pairs(library) do
                 if string.lower(song["title"]) == string.lower(args[2]) then
-                    print("Playing: " .. song["title"])
-                    sound.play(song["url"])
+                    playSong(song)
                     return
                 end
             end
@@ -74,8 +84,7 @@ if #args > 0 then
         if #library > 0 then
             while true do
                 for i, song in pairs(library) do
-                    print("Playing: " .. song["title"])
-                    sound.play(song["url"], song["duration"])
+                    playSong(song)
                 end
             end
         end
