@@ -53,7 +53,7 @@ function setupAliases()
 	shell.setAlias("update", "/.system/update.lua")
 	shell.setAlias("env", "/.system/env.lua")
 	shell.setAlias("blockify", "/.system/programs/blockify/startup.lua")
-	shell.setAlias("music", "blockify")
+	shell.setAlias("music", "/.system/programs/blockify/startup.lua")
 	shell.setAlias("home", "/.system/home.lua")
 	shell.setAlias("matrix", "/.system/programs/matrix.lua")
 end
