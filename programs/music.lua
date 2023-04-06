@@ -89,13 +89,30 @@ local function playSong(song)
 
     local monitor = peripheral.find("monitor")
     if monitor then
+        local mWidth, mHeight = monitor.getSize()
         monitor.clear()
         monitor.setCursorPos(1, 1)
         monitor.setTextColour(colors.red)
         monitor.write(song["author"])
-        monitor.setCursorPos(1, 2)
+        --monitor.setCursorPos(1, 2)
         monitor.setTextColour(colors.white)
-        monitor.write(song["title"])
+        local line = 2
+        monitor.setCursorPos(1, line)
+        local str = ""
+        for w in song["title"]:gmatch("%S+") do
+            if #str + #w + 1 > mWidth then
+                monitor.write(str)
+                line = line + 1
+                monitor.setCursorPos(1, line)
+                str = w .. " "
+            else
+                str = str .. w .. " "
+            end
+        end
+        if #str > 0 then
+            monitor.write(str)            
+        end
+        --monitor.write(song["title"])
     end
 
     parallel.waitForAll(

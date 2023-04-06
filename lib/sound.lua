@@ -41,7 +41,7 @@ function sound.play(file, duration, speaker)
     end
 
     if disc then
-        speaker.playSound(file)
+        speaker.playSound(file, 3)
         sleep(duration)
         return
     end
@@ -52,7 +52,7 @@ function sound.play(file, duration, speaker)
         if not chunk then break end
 
         local buffer = decoder(chunk)
-        while not speaker.playAudio(buffer) do
+        while not speaker.playAudio(buffer, 3) do
             os.pullEvent("speaker_audio_empty")
         end
     end
@@ -85,7 +85,7 @@ function sound.playDisk(drive, speaker)
 
     -- Play music from disk
     if disk.isPresent(drive) and disk.hasAudio(drive) then
-        disk.playAudio(drive)
+        disk.playAudio(drive, 3)
     end
 end
 
