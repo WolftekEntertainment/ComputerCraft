@@ -28,8 +28,7 @@ local function getMusicLibrary()
         {["title"]="11", ["author"]="C418", ["duration"]=71, ["url"]="minecraft:music_disc.11"},
         {["title"]="Wait", ["author"]="C418", ["duration"]=238, ["url"]="minecraft:music_disc.wait"},
         {["title"]="Pigstep", ["author"]="Lena Raine", ["duration"]=148, ["url"]="minecraft:music_disc.pigstep"},
-        {["title"]="Otherside", ["author"]="Lena Raine", ["duration"]=195, ["url"]="minecraft:music_disc.otherside"},
-        {["title"]="5", ["author"]="Samuel Åberg", ["duration"]=178, ["url"]="minecraft:music_disc.5"}
+        {["title"]="Otherside", ["author"]="Lena Raine", ["duration"]=195, ["url"]="minecraft:music_disc.otherside"}
     }
 
     for i, file in pairs(files) do
