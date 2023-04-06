@@ -6,7 +6,7 @@ local repo = require("repo")
 
 -- Globals
 local width, height = term.getSize()
-local libraryPath = "/.system/lib/musiclibrary.txt"
+local libraryPath = "/.system/programs/blockify/library.txt"
 local library = nil
 
 args = { ... }
