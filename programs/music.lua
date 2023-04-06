@@ -60,7 +60,7 @@ local function playSong(song)
     print("Playing: " .. song["title"])
     parallel.waitForAny(
         function()
-            textutils.slowPrint("##########", song["duration"] / 10)
+            textutils.slowPrint("##########", 10 / song["duration"])
         end,
         function()
             sound.play(song["url"], song["duration"])
