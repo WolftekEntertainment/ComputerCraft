@@ -22,6 +22,7 @@ local library = {
     {["title"]="otherside", ["author"]="Lena Raine", ["duration"]=195, ["url"]="minecraft:music_disc.otherside"},
     {["title"]="5", ["author"]="Samuel Åberg", ["duration"]=178, ["url"]="minecraft:music_disc.5"}
 }
+local width, height = term.getSize()
 
 args = { ... }
 
@@ -58,9 +59,10 @@ end
 
 local function playSong(song)
     print("Playing: " .. song["title"])
-    parallel.waitForAny(
+    parallel.waitForAll(
         function()
-            textutils.slowPrint("##########", 10 / song["duration"])
+            local progressBar = string.rep("#", width)
+            textutils.slowPrint(progressBar .. "/n", #progressBar / song["duration"])
         end,
         function()
             sound.play(song["url"], song["duration"])
