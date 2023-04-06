@@ -86,6 +86,18 @@ local function playSong(song)
     local length = string.format("%d", m) .. ":" .. string.format("%02d", s)
     print("Playing: " .. song["author"] .. " - " .. song["title"])
     print("Duration: " .. length)
+
+    local monitor = peripheral.find("monitor")
+    if monitor then
+        monitor.clear()
+        monitor.setCursorPos(1, 1)
+        monitor.setTextColour(colors.red)
+        monitor.write(song["author"])
+        monitor.setCursorPos(1, 2)
+        monitor.setTextColour(colors.white)
+        monitor.write(song["title"])
+    end
+
     parallel.waitForAll(
         function()
             local progressBar = string.rep("#", width - 1)
@@ -132,6 +144,12 @@ if #args > 0 then
             end
         end
     elseif args[1] == "stop" then
+        local monitor = peripheral.find("monitor")
+        if monitor then
+            monitor.clear()
+            monitor.setCursorPos(1, 1)
+            monitor.setTextColour(colors.white)
+        end
         sound.stop()
     elseif args[1] == "sync" then
         syncMusicLibrary()
