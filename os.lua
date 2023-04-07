@@ -58,7 +58,21 @@ function setupAliases()
 	shell.setAlias("matrix", "/.system/programs/matrix.lua")
 end
 
+function setup()
+	setupAliases()
+	showSplash()
+	shell.run("home")
+end
+
+function loop()
+	return
+end
+
 -- Run
-showSplash()
-setupAliases()
-shell.run("home")
+setup()
+--[[
+local exit = false
+while not exit do
+	exit = loop()
+end
+]]--
