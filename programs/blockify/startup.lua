@@ -6,6 +6,7 @@ local repo = require("repo")
 
 -- Globals
 local width, height = term.getSize()
+local playlistPath = shell.resolve(shell.getRunningProgram()) .. "/playlists"
 local libraryPath = "/.system/programs/blockify/library.txt"
 local library = nil
 
@@ -129,7 +130,8 @@ end
 local function printUsage()
     local programName = args[1] or fs.getName(shell.getRunningProgram())
     print("Plays music, usages:")
-    print(programName .. " play <url or file>")
+    print(programName .. " play <name>")
+    print(programName .. " playlist <name>")
     print(programName .. " loop")
     print(programName .. " stop")
     print(programName .. " sync")
@@ -148,6 +150,31 @@ if #args > 0 then
                     end
                 end
                 print("Could not find song " .. args[2])
+            end
+        end
+    elseif args[1] == "playlist" then
+        if not args[2] then
+            printUsage()
+        else
+            local path = playlistPath .. "/" .. args[2] .. ".txt"
+            if fs.exists(path) then
+                if not library then loadMusicLibrary() end
+
+                local file = fs.open(path, "r")
+                local list = textutils.unserialize(file.readAll())
+                file.close()
+                for i, songname in pairs(list) do
+                    local success = false
+                    for i, song in pairs(library) do
+                        if string.lower(song["title"]) == string.lower(songname) then
+                            playSong(song)
+                            success = true
+                        end
+                    end
+                    if not success then print("Could not find song " .. songname) end
+                end
+            else
+                print("Can't find playlist " .. args[2])
             end
         end
     elseif args[1] == "loop" then
